@@ -1,0 +1,834 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>warm journal · cherish</title>
+  <!-- Fonts & Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300..600&family=Newsreader:ital,opsz,wght@0,6..72,300..600;1,6..72,300..500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: #faf6f0;
+      background-image: radial-gradient(circle at 10% 20%, rgba(245, 235, 220, 0.7) 0%, transparent 30%),
+                        radial-gradient(circle at 90% 70%, rgba(230, 215, 190, 0.5) 0%, transparent 40%);
+      font-family: 'Inter', sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 1.5rem;
+      color: #3d352e;
+    }
+
+    /* main journal card – warm, paper-like */
+    .journal-app {
+      width: 100%;
+      max-width: 1300px;
+      height: 90vh;
+      background: #fffcf8;
+      border-radius: 2.5rem;
+      box-shadow: 0 20px 40px -12px rgba(100, 70, 40, 0.25), 0 2px 10px 0 rgba(0, 0, 0, 0.03), inset 0 1px 4px #fff9f0;
+      display: flex;
+      overflow: hidden;
+      border: 1px solid #f0e5d8;
+      backdrop-filter: blur(2px);
+    }
+
+    /* --- SIDEBAR (warm, cozy) --- */
+    .sidebar {
+      width: 280px;
+      background: #f9f1e7;
+      border-right: 1px solid #eadbc9;
+      display: flex;
+      flex-direction: column;
+      padding: 2rem 1rem 1.5rem 1rem;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      margin-bottom: 2.5rem;
+      padding-left: 0.75rem;
+    }
+
+    .logo i {
+      font-size: 1.8rem;
+      color: #b48b6c;
+    }
+
+    .logo h1 {
+      font-family: 'Newsreader', serif;
+      font-weight: 400;
+      font-size: 1.9rem;
+      letter-spacing: -0.5px;
+      color: #5e4b3a;
+      line-height: 1;
+    }
+
+    .logo span {
+      font-size: 0.9rem;
+      color: #aa8b74;
+      margin-left: 2px;
+    }
+
+    .nav-section {
+      margin-bottom: 2rem;
+    }
+
+    .nav-section h3 {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #b19782;
+      margin-bottom: 0.8rem;
+      padding-left: 0.75rem;
+      font-weight: 500;
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 0.8rem 0.75rem;
+      border-radius: 1.5rem;
+      color: #5b4a3b;
+      font-weight: 400;
+      transition: all 0.15s ease;
+      cursor: default;
+      font-size: 0.95rem;
+    }
+
+    .nav-item i {
+      width: 1.4rem;
+      font-size: 1.1rem;
+      color: #b48b6c;
+    }
+
+    .nav-item.active {
+      background: #ffffffd9;
+      box-shadow: 0 4px 12px rgba(180, 140, 100, 0.08);
+      font-weight: 500;
+      color: #3f2f22;
+    }
+
+    .nav-item:not(.active):hover {
+      background: #f3e8dd;
+    }
+
+    .tag-cloud {
+      margin-top: 0.5rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      padding-left: 0.75rem;
+    }
+
+    .tag {
+      background: #ebe0d4;
+      padding: 0.3rem 0.9rem;
+      border-radius: 2rem;
+      font-size: 0.75rem;
+      color: #5e4b3a;
+      font-weight: 400;
+      cursor: default;
+      transition: all 0.1s;
+    }
+
+    .tag:hover {
+      background: #d9cbbd;
+    }
+
+    .sidebar-footer {
+      margin-top: auto;
+      padding: 1rem 0.75rem 0.5rem;
+      border-top: 1px solid #e7d9cb;
+      font-size: 0.8rem;
+      color: #a58e7a;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .sidebar-footer i {
+      color: #c7a68b;
+    }
+
+    /* --- MAIN CONTENT (editor + entries) --- */
+    .main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    /* top bar */
+    .top-bar {
+      padding: 1.8rem 2rem 0.8rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .date-badge {
+      font-family: 'Newsreader', serif;
+      font-size: 1.2rem;
+      font-weight: 400;
+      color: #8b725d;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .date-badge i {
+      color: #c7a68b;
+    }
+
+    .actions {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .icon-btn {
+      background: #f3ece4;
+      border: none;
+      width: 2.4rem;
+      height: 2.4rem;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #8b725d;
+      font-size: 1rem;
+      cursor: default;
+      transition: 0.15s;
+      border: 1px solid #eadbc9;
+    }
+
+    .icon-btn:hover {
+      background: #e9ded2;
+      color: #5e4b3a;
+    }
+
+    /* editor card */
+    .editor-area {
+      padding: 0 2rem 1.5rem 2rem;
+    }
+
+    .editor-card {
+      background: #ffffff;
+      border-radius: 2rem;
+      box-shadow: 0 6px 18px rgba(150, 120, 90, 0.06);
+      border: 1px solid #f1e6db;
+      padding: 1.6rem 1.8rem;
+      transition: box-shadow 0.2s;
+    }
+
+    .editor-card:focus-within {
+      box-shadow: 0 10px 24px rgba(160, 120, 80, 0.1);
+    }
+
+    .editor-title input {
+      width: 100%;
+      border: none;
+      font-family: 'Newsreader', serif;
+      font-size: 1.6rem;
+      font-weight: 400;
+      color: #3d352e;
+      outline: none;
+      background: transparent;
+      padding: 0.2rem 0;
+      margin-bottom: 0.5rem;
+      letter-spacing: -0.3px;
+    }
+
+    .editor-title input::placeholder {
+      color: #cdbcac;
+      font-style: italic;
+      font-weight: 300;
+    }
+
+    .editor-text textarea {
+      width: 100%;
+      border: none;
+      resize: none;
+      font-family: 'Inter', sans-serif;
+      font-size: 1rem;
+      line-height: 1.6;
+      color: #4e4137;
+      outline: none;
+      background: transparent;
+      padding: 0.5rem 0;
+      min-height: 120px;
+      height: auto;
+      max-height: 200px;
+    }
+
+    .editor-text textarea::placeholder {
+      color: #cbbaa9;
+      font-style: italic;
+      font-weight: 300;
+    }
+
+    .editor-toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 0.8rem;
+      padding-top: 0.8rem;
+      border-top: 1px solid #f0e7de;
+    }
+
+    .mood-selector {
+      display: flex;
+      gap: 0.6rem;
+    }
+
+    .mood {
+      font-size: 1.2rem;
+      cursor: default;
+      opacity: 0.5;
+      transition: 0.1s;
+    }
+
+    .mood.active {
+      opacity: 1;
+      transform: scale(1.1);
+    }
+
+    .editor-buttons {
+      display: flex;
+      gap: 0.8rem;
+      align-items: center;
+    }
+
+    .btn {
+      border: none;
+      padding: 0.6rem 1.4rem;
+      border-radius: 2rem;
+      font-weight: 500;
+      font-size: 0.85rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      cursor: default;
+      transition: 0.15s;
+      font-family: 'Inter', sans-serif;
+    }
+
+    .btn-primary {
+      background: #b48b6c;
+      color: white;
+      box-shadow: 0 4px 10px rgba(180, 140, 100, 0.25);
+    }
+
+    .btn-primary:hover {
+      background: #a0795b;
+    }
+
+    .btn-secondary {
+      background: #f3ece4;
+      color: #6b5a4b;
+    }
+
+    .btn-secondary:hover {
+      background: #e9ded2;
+    }
+
+    /* entries list – warm, scrollable */
+    .entries-list {
+      flex: 1;
+      overflow-y: auto;
+      padding: 0.2rem 2rem 2rem 2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.8rem;
+      scrollbar-width: thin;
+      scrollbar-color: #d9cbbd #f9f1e7;
+    }
+
+    .entries-list::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    .entries-list::-webkit-scrollbar-thumb {
+      background: #d9cbbd;
+      border-radius: 10px;
+    }
+
+    .entry-item {
+      background: #fefcf9;
+      border-radius: 1.8rem;
+      padding: 1.4rem 1.6rem;
+      border: 1px solid #f0e3d6;
+      transition: all 0.15s;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.01);
+    }
+
+    .entry-item:hover {
+      background: #ffffff;
+      border-color: #e6d6c6;
+      box-shadow: 0 8px 18px -6px rgba(150, 120, 90, 0.12);
+    }
+
+    .entry-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .entry-header h4 {
+      font-family: 'Newsreader', serif;
+      font-weight: 500;
+      font-size: 1.2rem;
+      color: #3d352e;
+      letter-spacing: -0.2px;
+    }
+
+    .entry-meta {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      font-size: 0.75rem;
+      color: #a28d7a;
+    }
+
+    .entry-meta i {
+      font-size: 0.7rem;
+      color: #c7a68b;
+    }
+
+    .entry-preview {
+      font-size: 0.9rem;
+      color: #6b5a4b;
+      line-height: 1.5;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .entry-tags {
+      display: flex;
+      gap: 0.5rem;
+      margin-top: 0.2rem;
+    }
+
+    .entry-tag {
+      background: #f2e9e1;
+      padding: 0.15rem 0.8rem;
+      border-radius: 2rem;
+      font-size: 0.7rem;
+      color: #7d6857;
+    }
+
+    .empty-msg {
+      text-align: center;
+      color: #b8a392;
+      font-style: italic;
+      padding: 2rem;
+      font-size: 0.95rem;
+    }
+
+    /* small flourish */
+    .warm-accent {
+      font-family: 'Newsreader', serif;
+      font-style: italic;
+      color: #b48b6c;
+    }
+
+    /* responsiveness */
+    @media (max-width: 800px) {
+      .sidebar {
+        width: 80px;
+        padding: 1.5rem 0.5rem;
+      }
+      .logo h1, .logo span, .nav-section h3, .nav-item span, .tag-cloud, .sidebar-footer span {
+        display: none;
+      }
+      .logo {
+        justify-content: center;
+        padding-left: 0;
+      }
+      .nav-item {
+        justify-content: center;
+        padding: 0.8rem 0;
+      }
+      .nav-item i {
+        font-size: 1.4rem;
+      }
+      .sidebar-footer {
+        justify-content: center;
+      }
+      .main {
+        padding: 0.5rem;
+      }
+      .top-bar {
+        padding: 1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="journal-app">
+    <!-- Sidebar: warm & functional -->
+    <aside class="sidebar">
+      <div class="logo">
+        <i class="fas fa-feather-alt"></i>
+        <h1>warm<span>journal</span></h1>
+      </div>
+
+      <div class="nav-section">
+        <h3>today</h3>
+        <div class="nav-item active">
+          <i class="fas fa-pen-fancy"></i>
+          <span>New entry</span>
+        </div>
+        <div class="nav-item">
+          <i class="fas fa-calendar-alt"></i>
+          <span>Calendar</span>
+        </div>
+        <div class="nav-item">
+          <i class="fas fa-heart"></i>
+          <span>Favorites</span>
+        </div>
+      </div>
+
+      <div class="nav-section">
+        <h3>collections</h3>
+        <div class="nav-item">
+          <i class="fas fa-book-open"></i>
+          <span>All entries</span>
+        </div>
+        <div class="nav-item">
+          <i class="fas fa-star"></i>
+          <span>Moments</span>
+        </div>
+        <div class="nav-item">
+          <i class="fas fa-lightbulb"></i>
+          <span>Ideas</span>
+        </div>
+      </div>
+
+      <div class="nav-section">
+        <h3>tags</h3>
+        <div class="tag-cloud">
+          <span class="tag">#gratitude</span>
+          <span class="tag">#reflection</span>
+          <span class="tag">#daily</span>
+          <span class="tag">#dreams</span>
+          <span class="tag">#growth</span>
+        </div>
+      </div>
+
+      <div class="sidebar-footer">
+        <i class="fas fa-cloud-moon"></i>
+        <span>cherish every thought</span>
+      </div>
+    </aside>
+
+    <!-- Main journal area -->
+    <main class="main">
+      <!-- top bar with date + quick actions -->
+      <div class="top-bar">
+        <div class="date-badge">
+          <i class="fas fa-calendar-day"></i>
+          <span id="currentDate">monday, april 7</span>
+        </div>
+        <div class="actions">
+          <button class="icon-btn" title="Search (demo)"><i class="fas fa-search"></i></button>
+          <button class="icon-btn" title="Streak (7 days)"><i class="fas fa-fire"></i></button>
+          <button class="icon-btn" title="Reminders"><i class="fas fa-bell"></i></button>
+        </div>
+      </div>
+
+      <!-- Editor card -->
+      <div class="editor-area">
+        <div class="editor-card">
+          <div class="editor-title">
+            <input type="text" id="entryTitle" placeholder="Give this moment a name..." value="morning reflections">
+          </div>
+          <div class="editor-text">
+            <textarea id="entryContent" placeholder="Write freely, warm and slow...">today i noticed the light coming through the leaves. a small joy.</textarea>
+          </div>
+          <div class="editor-toolbar">
+            <div class="mood-selector">
+              <span class="mood active" title="grateful">🌿</span>
+              <span class="mood" title="peaceful">☁️</span>
+              <span class="mood" title="inspired">✨</span>
+              <span class="mood" title="tender">🌸</span>
+            </div>
+            <div class="editor-buttons">
+              <button class="btn btn-secondary" id="clearBtn"><i class="fas fa-undo-alt"></i> clear</button>
+              <button class="btn btn-primary" id="saveBtn"><i class="fas fa-feather"></i> save entry</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Entries list (dynamic) -->
+      <div class="entries-list" id="entriesList">
+        <!-- entry 1 (static example) -->
+        <div class="entry-item">
+          <div class="entry-header">
+            <h4>evening wind</h4>
+            <div class="entry-meta">
+              <i class="far fa-clock"></i> 8:22 pm
+              <i class="fas fa-heart" style="color:#d9b8a2;"></i>
+            </div>
+          </div>
+          <div class="entry-preview">the air smelled like rain and old books. i felt held by something bigger.</div>
+          <div class="entry-tags">
+            <span class="entry-tag">#peaceful</span>
+            <span class="entry-tag">#nature</span>
+          </div>
+        </div>
+
+        <div class="entry-item">
+          <div class="entry-header">
+            <h4>small win</h4>
+            <div class="entry-meta">
+              <i class="far fa-clock"></i> 2:15 pm
+              <i class="fas fa-heart" style="color:#d9b8a2;"></i>
+            </div>
+          </div>
+          <div class="entry-preview">finished the project i was avoiding. celebrated with a warm cup of tea.</div>
+          <div class="entry-tags">
+            <span class="entry-tag">#growth</span>
+            <span class="entry-tag">#gratitude</span>
+          </div>
+        </div>
+
+        <div class="entry-item">
+          <div class="entry-header">
+            <h4>dream fragment</h4>
+            <div class="entry-meta">
+              <i class="far fa-clock"></i> 6:50 am
+              <i class="fas fa-heart" style="color:#d9b8a2;"></i>
+            </div>
+          </div>
+          <div class="entry-preview">i was walking through a house made of sunlight. every room was a memory.</div>
+          <div class="entry-tags">
+            <span class="entry-tag">#dreams</span>
+            <span class="entry-tag">#reflection</span>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    (function() {
+      // ---- warm journaling functionality ----
+
+      // Set current date
+      const dateEl = document.getElementById('currentDate');
+      const today = new Date();
+      const options = { weekday: 'long', month: 'long', day: 'numeric' };
+      dateEl.textContent = today.toLocaleDateString('en-US', options).toLowerCase();
+
+      // Elements
+      const titleInput = document.getElementById('entryTitle');
+      const contentInput = document.getElementById('entryContent');
+      const saveBtn = document.getElementById('saveBtn');
+      const clearBtn = document.getElementById('clearBtn');
+      const entriesList = document.getElementById('entriesList');
+
+      // Mood selector (just toggle active class for demo)
+      const moods = document.querySelectorAll('.mood');
+      moods.forEach(mood => {
+        mood.addEventListener('click', function() {
+          moods.forEach(m => m.classList.remove('active'));
+          this.classList.add('active');
+        });
+      });
+
+      // ---- helper: get current time in friendly format ----
+      function getCurrentTime() {
+        const now = new Date();
+        let hours = now.getHours();
+        const minutes = now.getMinutes().toString().padStart(2, '0');
+        const ampm = hours >= 12 ? 'pm' : 'am';
+        hours = hours % 12 || 12;
+        return `${hours}:${minutes} ${ampm}`;
+      }
+
+      // ---- helper: create a new entry element ----
+      function createEntryElement(title, content, time = null, tags = ['#reflection']) {
+        const entryDiv = document.createElement('div');
+        entryDiv.className = 'entry-item';
+
+        const displayTime = time || getCurrentTime();
+
+        // build the inner HTML
+        entryDiv.innerHTML = `
+          <div class="entry-header">
+            <h4>${escapeHtml(title) || 'untitled moment'}</h4>
+            <div class="entry-meta">
+              <i class="far fa-clock"></i> ${displayTime}
+              <i class="fas fa-heart" style="color:#d9b8a2;"></i>
+            </div>
+          </div>
+          <div class="entry-preview">${escapeHtml(content) || '...'}</div>
+          <div class="entry-tags">
+            ${tags.map(tag => `<span class="entry-tag">${escapeHtml(tag)}</span>`).join('')}
+          </div>
+        `;
+        return entryDiv;
+      }
+
+      // simple escape for safety (not perfect but enough for demo)
+      function escapeHtml(text) {
+        if (!text) return '';
+        return text.replace(/[&<>"]/g, function(m) {
+          if (m === '&') return '&amp;';
+          if (m === '<') return '&lt;';
+          if (m === '>') return '&gt;';
+          if (m === '"') return '&quot;';
+          return m;
+        });
+      }
+
+      // ---- add new entry from editor ----
+      function addEntryFromEditor() {
+        const title = titleInput.value.trim();
+        const content = contentInput.value.trim();
+
+        // if both empty, just gently ignore
+        if (!title && !content) {
+          // optional: subtle feedback
+          titleInput.placeholder = 'write something warm...';
+          return;
+        }
+
+        // Detect some tags based on content / mood (just for warmth)
+        const tags = [];
+        if (content.toLowerCase().includes('grateful') || content.toLowerCase().includes('thank')) tags.push('#gratitude');
+        if (content.toLowerCase().includes('dream')) tags.push('#dreams');
+        if (content.toLowerCase().includes('today') || content.toLowerCase().includes('day')) tags.push('#daily');
+        if (content.toLowerCase().includes('feel') || content.toLowerCase().includes('heart')) tags.push('#reflection');
+        if (tags.length === 0) tags.push('#reflection', '#daily'); // fallback
+
+        // limit to 3 tags max for neatness
+        const finalTags = tags.slice(0, 3);
+
+        // create new entry element
+        const newEntry = createEntryElement(title, content, null, finalTags);
+
+        // prepend to entries list
+        entriesList.prepend(newEntry);
+
+        // gently clear editor
+        titleInput.value = '';
+        contentInput.value = '';
+        // set a soft placeholder back
+        titleInput.placeholder = 'Give this moment a name...';
+        contentInput.placeholder = 'Write freely, warm and slow...';
+
+        // optional: brief button feedback
+        saveBtn.innerHTML = '<i class="fas fa-check"></i> saved';
+        setTimeout(() => {
+          saveBtn.innerHTML = '<i class="fas fa-feather"></i> save entry';
+        }, 1000);
+      }
+
+      // ---- clear editor (with soft reset) ----
+      function clearEditor() {
+        titleInput.value = '';
+        contentInput.value = '';
+        titleInput.placeholder = 'Give this moment a name...';
+        contentInput.placeholder = 'Write freely, warm and slow...';
+        // restore default mood active
+        moods.forEach(m => m.classList.remove('active'));
+        if (moods.length > 0) moods[0].classList.add('active');
+
+        // subtle feedback
+        clearBtn.innerHTML = '<i class="fas fa-check"></i> cleared';
+        setTimeout(() => {
+          clearBtn.innerHTML = '<i class="fas fa-undo-alt"></i> clear';
+        }, 800);
+      }
+
+      // ---- event listeners ----
+      saveBtn.addEventListener('click', addEntryFromEditor);
+
+      clearBtn.addEventListener('click', clearEditor);
+
+      // optional: save with Ctrl/Cmd + Enter from content area
+      contentInput.addEventListener('keydown', (e) => {
+        if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+          e.preventDefault();
+          addEntryFromEditor();
+        }
+      });
+
+      // also allow title field to trigger with Ctrl+Enter (for convenience)
+      titleInput.addEventListener('keydown', (e) => {
+        if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+          e.preventDefault();
+          addEntryFromEditor();
+        }
+      });
+
+      // ---- little interactive warmth: double click on entry to "heart" it (demo only) ----
+      // (just a playful touch)
+      entriesList.addEventListener('dblclick', (e) => {
+        const entry = e.target.closest('.entry-item');
+        if (!entry) return;
+        const heartIcon = entry.querySelector('.fa-heart');
+        if (heartIcon) {
+          heartIcon.style.color = heartIcon.style.color === 'rgb(217, 184, 162)' ? '#c46b4a' : '#d9b8a2';
+          heartIcon.style.transform = 'scale(1.2)';
+          setTimeout(() => heartIcon.style.transform = 'scale(1)', 150);
+        }
+      });
+
+      // set initial mood active (first one)
+      if (moods.length > 0) moods[0].classList.add('active');
+
+      // ---- bonus: keep textarea auto-resize-ish (simple height adjust) ----
+      contentInput.addEventListener('input', function() {
+        this.style.height = 'auto';
+        this.style.height = Math.min(this.scrollHeight, 200) + 'px';
+      });
+      // trigger initial height
+      contentInput.style.height = 'auto';
+      contentInput.style.height = Math.min(contentInput.scrollHeight, 200) + 'px';
+
+      // also for title nothing needed
+
+      // ---- sidebar nav items (just visual interactive feedback) ----
+      const navItems = document.querySelectorAll('.nav-item');
+      navItems.forEach(item => {
+        item.addEventListener('click', function() {
+          navItems.forEach(i => i.classList.remove('active'));
+          this.classList.add('active');
+          // (In a real app, this would filter entries, but we keep the warmth)
+        });
+      });
+
+      // ---- icon buttons demo (gentle feedback) ----
+      const iconBtns = document.querySelectorAll('.icon-btn');
+      iconBtns.forEach(btn => {
+        btn.addEventListener('click', function() {
+          this.style.transform = 'scale(0.92)';
+          setTimeout(() => this.style.transform = 'scale(1)', 120);
+        });
+      });
+
+    })();
+  </script>
+</body>
+</html>
