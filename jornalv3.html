@@ -1,0 +1,1756 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>warm journal · cherish</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300..700&family=Newsreader:ital,opsz,wght@0,6..72,300..600;1,6..72,300..500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+<style>
+  :root {
+    --bg: #faf6f0;
+    --surface: #fffcf8;
+    --sidebar: #f9f1e7;
+    --border: #f0e5d8;
+    --border-strong: #e6d6c6;
+    --text: #3d352e;
+    --text-soft: #6b5a4b;
+    --text-muted: #a28d7a;
+    --accent: #b48b6c;
+    --accent-hover: #a0795b;
+    --accent-soft: #ebe0d4;
+    --heart: #c46b4a;
+    --shadow-sm: 0 2px 6px rgba(150,120,90,.06);
+    --shadow-md: 0 8px 18px -6px rgba(150,120,90,.12);
+    --shadow-lg: 0 20px 40px -12px rgba(100,70,40,.25);
+    --radius: 1.8rem;
+    --radius-sm: 1rem;
+  }
+  [data-theme="night"] {
+    --bg: #211b16;
+    --surface: #2a231d;
+    --sidebar: #251f19;
+    --border: #3a2f26;
+    --border-strong: #4a3d31;
+    --text: #ece2d5;
+    --text-soft: #c9b8a5;
+    --text-muted: #8a7663;
+    --accent: #c69a77;
+    --accent-hover: #d8ab88;
+    --accent-soft: #3a2f26;
+    --heart: #e07a55;
+    --shadow-sm: 0 2px 6px rgba(0,0,0,.3);
+    --shadow-md: 0 8px 18px -6px rgba(0,0,0,.4);
+    --shadow-lg: 0 20px 40px -12px rgba(0,0,0,.6);
+  }
+  [data-theme="light"] {
+    --bg: #ffffff;
+    --surface: #ffffff;
+    --sidebar: #fafafa;
+    --border: #eeeeee;
+    --border-strong: #e0e0e0;
+    --text: #222222;
+    --text-soft: #555555;
+    --text-muted: #999999;
+    --accent: #b48b6c;
+    --accent-hover: #a0795b;
+    --accent-soft: #f0f0f0;
+    --heart: #e05252;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    background-image: radial-gradient(circle at 10% 20%, rgba(245,235,220,.7) 0%, transparent 30%),
+                      radial-gradient(circle at 90% 70%, rgba(230,215,190,.5) 0%, transparent 40%);
+    font-family: 'Inter', sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 1.5rem;
+    color: var(--text);
+    transition: background .3s, color .3s;
+  }
+
+  .journal-app {
+    width: 100%;
+    max-width: 1400px;
+    height: 92vh;
+    background: var(--surface);
+    border-radius: 2.5rem;
+    box-shadow: var(--shadow-lg);
+    display: flex;
+    overflow: hidden;
+    border: 1px solid var(--border);
+    transition: background .3s, border-color .3s;
+  }
+
+  /* ===== SIDEBAR ===== */
+  .sidebar {
+    width: 290px;
+    background: var(--sidebar);
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    padding: 1.6rem 1rem 1rem;
+    overflow-y: auto;
+    flex-shrink: 0;
+    transition: background .3s;
+  }
+  .sidebar::-webkit-scrollbar { width: 4px; }
+  .sidebar::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 4px; }
+
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: .6rem;
+    margin-bottom: 1.6rem;
+    padding-left: .75rem;
+  }
+  .logo i { font-size: 1.8rem; color: var(--accent); }
+  .logo h1 {
+    font-family: 'Newsreader', serif;
+    font-weight: 400;
+    font-size: 1.9rem;
+    letter-spacing: -.5px;
+    color: var(--text);
+    line-height: 1;
+  }
+  .logo span { font-size: .9rem; color: var(--text-muted); }
+
+  .nav-section { margin-bottom: 1.4rem; }
+  .nav-section h3 {
+    font-size: .7rem;
+    text-transform: uppercase;
+    letter-spacing: .1em;
+    color: var(--text-muted);
+    margin-bottom: .6rem;
+    padding-left: .75rem;
+    font-weight: 600;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .nav-section h3 button {
+    background: none; border: none; color: var(--accent); cursor: pointer;
+    font-size: .75rem; padding: .1rem .3rem; border-radius: .5rem;
+  }
+  .nav-section h3 button:hover { background: var(--accent-soft); }
+
+  .nav-item {
+    display: flex;
+    align-items: center;
+    gap: .9rem;
+    padding: .7rem .75rem;
+    border-radius: var(--radius-sm);
+    color: var(--text-soft);
+    font-weight: 400;
+    transition: all .15s ease;
+    cursor: pointer;
+    font-size: .9rem;
+    border: none;
+    background: none;
+    width: 100%;
+    text-align: left;
+    font-family: inherit;
+  }
+  .nav-item i { width: 1.3rem; font-size: 1rem; color: var(--accent); text-align: center; }
+  .nav-item .count {
+    margin-left: auto;
+    font-size: .7rem;
+    background: var(--accent-soft);
+    padding: .1rem .5rem;
+    border-radius: 1rem;
+    color: var(--text-muted);
+  }
+  .nav-item.active {
+    background: var(--surface);
+    box-shadow: var(--shadow-sm);
+    font-weight: 500;
+    color: var(--text);
+  }
+  .nav-item:not(.active):hover { background: var(--accent-soft); }
+
+  .tag-cloud {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .4rem;
+    padding: 0 .75rem;
+  }
+  .tag {
+    background: var(--accent-soft);
+    padding: .25rem .75rem;
+    border-radius: 2rem;
+    font-size: .72rem;
+    color: var(--text-soft);
+    font-weight: 400;
+    cursor: pointer;
+    transition: all .15s;
+    border: 1px solid transparent;
+  }
+  .tag:hover { background: var(--accent); color: #fff; }
+  .tag.active { background: var(--accent); color: #fff; font-weight: 500; }
+  .tag .tag-count { opacity: .7; margin-left: .2rem; font-size: .65rem; }
+
+  .sidebar-footer {
+    margin-top: auto;
+    padding: 1rem .75rem .5rem;
+    border-top: 1px solid var(--border);
+    font-size: .75rem;
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+  }
+  .sidebar-footer i { color: var(--accent); }
+
+  .streak-badge {
+    display: flex;
+    align-items: center;
+    gap: .4rem;
+    background: linear-gradient(135deg, #ffecd2, #fcb69f);
+    color: #8b4a1f;
+    padding: .4rem .7rem;
+    border-radius: 1rem;
+    font-size: .75rem;
+    font-weight: 600;
+    margin-bottom: .8rem;
+  }
+  [data-theme="night"] .streak-badge { background: linear-gradient(135deg, #4a2f1f, #3a2518); color: #ffc896; }
+
+  /* ===== MAIN ===== */
+  .main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    min-width: 0;
+  }
+
+  .top-bar {
+    padding: 1.4rem 2rem .6rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .date-badge {
+    font-family: 'Newsreader', serif;
+    font-size: 1.15rem;
+    font-weight: 400;
+    color: var(--text-soft);
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+    white-space: nowrap;
+  }
+  .date-badge i { color: var(--accent); }
+
+  .search-box {
+    display: flex;
+    align-items: center;
+    background: var(--accent-soft);
+    border: 1px solid var(--border);
+    border-radius: 2rem;
+    padding: .3rem .9rem;
+    max-width: 280px;
+    width: 100%;
+    transition: border-color .15s, box-shadow .15s;
+  }
+  .search-box:focus-within {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(180,140,100,.15);
+  }
+  .search-box input {
+    border: none;
+    background: transparent;
+    outline: none;
+    font-size: .85rem;
+    color: var(--text);
+    padding: .25rem .4rem;
+    width: 100%;
+    font-family: inherit;
+  }
+  .search-box i { color: var(--accent); font-size: .8rem; }
+  .search-box kbd {
+    font-size: .65rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: .35rem;
+    padding: .05rem .3rem;
+    color: var(--text-muted);
+    font-family: monospace;
+  }
+
+  .actions { display: flex; gap: .4rem; }
+
+  .icon-btn {
+    background: var(--accent-soft);
+    border: 1px solid var(--border);
+    width: 2.3rem;
+    height: 2.3rem;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-soft);
+    font-size: .9rem;
+    cursor: pointer;
+    transition: all .15s;
+  }
+  .icon-btn:hover { background: var(--accent); color: #fff; border-color: var(--accent); }
+  .icon-btn.active { background: var(--accent); color: #fff; }
+
+  /* ===== EDITOR ===== */
+  .editor-area { padding: 0 2rem 1rem; }
+
+  .editor-card {
+    background: var(--surface);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--border);
+    padding: 1.3rem 1.6rem;
+    transition: box-shadow .2s, border-color .2s;
+  }
+  .editor-card:focus-within {
+    box-shadow: var(--shadow-md);
+    border-color: var(--border-strong);
+  }
+  .editor-card.editing {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(180,140,100,.12);
+  }
+
+  .editing-banner {
+    display: none;
+    align-items: center;
+    gap: .5rem;
+    background: var(--accent-soft);
+    color: var(--text-soft);
+    font-size: .75rem;
+    padding: .3rem .7rem;
+    border-radius: 1rem;
+    margin-bottom: .6rem;
+    width: fit-content;
+  }
+  .editing-banner.show { display: flex; }
+
+  .editor-title input {
+    width: 100%;
+    border: none;
+    font-family: 'Newsreader', serif;
+    font-size: 1.5rem;
+    font-weight: 400;
+    color: var(--text);
+    outline: none;
+    background: transparent;
+    padding: .2rem 0;
+    margin-bottom: .3rem;
+    letter-spacing: -.3px;
+  }
+  .editor-title input::placeholder { color: var(--text-muted); font-style: italic; font-weight: 300; }
+
+  .editor-text textarea {
+    width: 100%;
+    border: none;
+    resize: none;
+    font-family: 'Inter', sans-serif;
+    font-size: .95rem;
+    line-height: 1.65;
+    color: var(--text-soft);
+    outline: none;
+    background: transparent;
+    padding: .4rem 0;
+    min-height: 70px;
+    max-height: 180px;
+    transition: height .1s;
+  }
+  .editor-text textarea::placeholder { color: var(--text-muted); font-style: italic; font-weight: 300; }
+
+  .editor-tags-builder {
+    display: flex;
+    align-items: center;
+    gap: .4rem;
+    flex-wrap: wrap;
+    margin-top: .3rem;
+  }
+  .editor-tags-builder input {
+    border: none;
+    background: var(--accent-soft);
+    border-radius: 1rem;
+    padding: .25rem .8rem;
+    font-size: .72rem;
+    outline: none;
+    color: var(--text-soft);
+    width: 140px;
+    font-family: inherit;
+  }
+  .editor-tags-builder input::placeholder { color: var(--text-muted); }
+
+  .tag-chip {
+    background: var(--accent);
+    color: #fff;
+    padding: .2rem .6rem;
+    border-radius: 1rem;
+    font-size: .72rem;
+    display: flex;
+    align-items: center;
+    gap: .3rem;
+  }
+  .tag-chip i { cursor: pointer; font-size: .6rem; opacity: .8; }
+  .tag-chip i:hover { opacity: 1; }
+
+  .autocomplete-popup {
+    position: absolute;
+    background: var(--surface);
+    border: 1px solid var(--border-strong);
+    border-radius: .6rem;
+    box-shadow: var(--shadow-md);
+    padding: .3rem;
+    z-index: 50;
+    min-width: 140px;
+    display: none;
+  }
+  .autocomplete-popup.show { display: block; }
+  .autocomplete-popup div {
+    padding: .3rem .6rem;
+    font-size: .75rem;
+    border-radius: .4rem;
+    cursor: pointer;
+    color: var(--text-soft);
+  }
+  .autocomplete-popup div:hover { background: var(--accent-soft); }
+
+  .editor-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: .7rem;
+    padding-top: .7rem;
+    border-top: 1px solid var(--border);
+    gap: .5rem;
+    flex-wrap: wrap;
+  }
+
+  .mood-selector { display: flex; gap: .4rem; }
+  .mood {
+    font-size: 1.15rem;
+    cursor: pointer;
+    opacity: .35;
+    transition: all .15s ease;
+    user-select: none;
+    padding: .1rem;
+    border-radius: 50%;
+  }
+  .mood:hover { opacity: .7; transform: scale(1.1); }
+  .mood.active { opacity: 1; transform: scale(1.2); }
+
+  .editor-meta {
+    font-size: .7rem;
+    color: var(--text-muted);
+    display: flex;
+    gap: .8rem;
+    align-items: center;
+  }
+
+  .editor-buttons { display: flex; gap: .5rem; align-items: center; flex-wrap: wrap; }
+
+  .btn {
+    border: none;
+    padding: .55rem 1.1rem;
+    border-radius: 2rem;
+    font-weight: 500;
+    font-size: .8rem;
+    display: flex;
+    align-items: center;
+    gap: .4rem;
+    cursor: pointer;
+    transition: all .15s;
+    font-family: inherit;
+    white-space: nowrap;
+  }
+  .btn-primary {
+    background: var(--accent);
+    color: #fff;
+    box-shadow: 0 3px 8px rgba(180,140,100,.25);
+  }
+  .btn-primary:hover { background: var(--accent-hover); transform: translateY(-1px); }
+  .btn-secondary { background: var(--accent-soft); color: var(--text-soft); }
+  .btn-secondary:hover { background: var(--border); }
+  .btn-ghost { background: transparent; color: var(--text-muted); padding: .5rem .7rem; }
+  .btn-ghost:hover { background: var(--accent-soft); color: var(--text-soft); }
+  .btn:disabled { opacity: .5; cursor: not-allowed; }
+
+  /* ===== TOOLBAR ===== */
+  .list-toolbar {
+    padding: 0 2rem .5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: .5rem;
+    flex-wrap: wrap;
+  }
+  .list-toolbar .left, .list-toolbar .right { display: flex; gap: .4rem; align-items: center; flex-wrap: wrap; }
+  .chip-btn {
+    background: var(--accent-soft);
+    border: 1px solid var(--border);
+    color: var(--text-soft);
+    padding: .3rem .8rem;
+    border-radius: 2rem;
+    font-size: .72rem;
+    cursor: pointer;
+    font-family: inherit;
+    display: flex;
+    align-items: center;
+    gap: .35rem;
+    transition: all .15s;
+  }
+  .chip-btn:hover { background: var(--accent); color: #fff; border-color: var(--accent); }
+  .chip-btn.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+
+  select.chip-btn { padding-right: 1.5rem; appearance: none; background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23a28d7a' stroke-width='2'%3e%3cpolyline points='6 9 12 15 18 9'/%3e%3c/svg%3e"); background-repeat: no-repeat; background-position: right .4rem center; background-size: .7rem; }
+
+  /* ===== ENTRIES ===== */
+  .entries-list {
+    flex: 1;
+    overflow-y: auto;
+    padding: .3rem 2rem 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: .7rem;
+    scrollbar-width: thin;
+    scrollbar-color: var(--border-strong) transparent;
+  }
+  .entries-list::-webkit-scrollbar { width: 6px; }
+  .entries-list::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 10px; }
+
+  .group-header {
+    font-family: 'Newsreader', serif;
+    font-size: .95rem;
+    color: var(--text-muted);
+    font-style: italic;
+    padding: .8rem .3rem .2rem;
+    position: sticky;
+    top: 0;
+    background: var(--surface);
+    z-index: 2;
+  }
+
+  .entry-item {
+    background: var(--surface);
+    border-radius: var(--radius);
+    padding: 1.1rem 1.4rem;
+    border: 1px solid var(--border);
+    transition: all .15s;
+    display: flex;
+    flex-direction: column;
+    gap: .35rem;
+    cursor: pointer;
+    position: relative;
+  }
+  .entry-item:hover {
+    border-color: var(--border-strong);
+    box-shadow: var(--shadow-md);
+    transform: translateY(-1px);
+  }
+  .entry-item.pinned {
+    background: linear-gradient(to right, rgba(180,140,100,.05), transparent);
+    border-left: 3px solid var(--accent);
+  }
+  .entry-item.favorite .entry-title-wrap h4::after {
+    content: ' ♥';
+    color: var(--heart);
+    font-size: .85rem;
+  }
+
+  .entry-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: .5rem;
+  }
+  .entry-title-wrap { display: flex; align-items: center; gap: .5rem; min-width: 0; flex: 1; }
+  .entry-mood { font-size: 1.05rem; flex-shrink: 0; }
+  .entry-header h4 {
+    font-family: 'Newsreader', serif;
+    font-weight: 500;
+    font-size: 1.15rem;
+    color: var(--text);
+    letter-spacing: -.2px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .entry-meta {
+    display: flex;
+    align-items: center;
+    gap: .6rem;
+    font-size: .7rem;
+    color: var(--text-muted);
+    flex-shrink: 0;
+  }
+  .entry-meta i { font-size: .65rem; color: var(--accent); }
+  .entry-meta .meta-btn {
+    background: none; border: none; cursor: pointer; color: var(--text-muted);
+    font-size: .7rem; padding: .15rem; border-radius: .3rem; transition: all .15s;
+  }
+  .entry-meta .meta-btn:hover { color: var(--accent); background: var(--accent-soft); }
+  .entry-meta .meta-btn.fav-on { color: var(--heart); }
+  .entry-meta .meta-btn.pin-on { color: var(--accent); }
+
+  .entry-preview {
+    font-size: .85rem;
+    color: var(--text-soft);
+    line-height: 1.55;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    white-space: pre-wrap;
+  }
+
+  .entry-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: .5rem;
+    flex-wrap: wrap;
+    margin-top: .15rem;
+  }
+  .entry-tags { display: flex; gap: .35rem; flex-wrap: wrap; }
+  .entry-tag {
+    background: var(--accent-soft);
+    padding: .12rem .7rem;
+    border-radius: 2rem;
+    font-size: .68rem;
+    color: var(--text-soft);
+    cursor: pointer;
+    transition: all .15s;
+  }
+  .entry-tag:hover { background: var(--accent); color: #fff; }
+  .entry-reading { font-size: .68rem; color: var(--text-muted); }
+
+  .empty-msg {
+    text-align: center;
+    color: var(--text-muted);
+    font-style: italic;
+    padding: 3rem 1rem;
+    font-size: .95rem;
+  }
+  .empty-msg i { font-size: 2rem; display: block; margin-bottom: .8rem; opacity: .4; }
+
+  /* ===== MODAL ===== */
+  .modal-overlay {
+    position: fixed; inset: 0;
+    background: rgba(60,45,30,.35);
+    backdrop-filter: blur(4px);
+    display: flex; align-items: center; justify-content: center;
+    z-index: 100;
+    opacity: 0; pointer-events: none;
+    transition: opacity .2s ease;
+    padding: 1rem;
+  }
+  .modal-overlay.open { opacity: 1; pointer-events: auto; }
+
+  .modal-card {
+    background: var(--surface);
+    border-radius: 2rem;
+    padding: 1.8rem;
+    width: 100%;
+    max-width: 640px;
+    max-height: 85vh;
+    overflow-y: auto;
+    box-shadow: var(--shadow-lg);
+    border: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    gap: .8rem;
+    transform: scale(.96);
+    transition: transform .2s ease;
+  }
+  .modal-overlay.open .modal-card { transform: scale(1); }
+
+  .modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: .7rem;
+    gap: .8rem;
+  }
+  .modal-header h3 {
+    font-family: 'Newsreader', serif;
+    font-size: 1.5rem;
+    font-weight: 500;
+    color: var(--text);
+  }
+  .modal-meta {
+    font-size: .75rem;
+    color: var(--text-muted);
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+  .modal-body {
+    font-size: .95rem;
+    line-height: 1.75;
+    color: var(--text-soft);
+    white-space: pre-wrap;
+  }
+  .modal-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: .5rem;
+    flex-wrap: wrap;
+    border-top: 1px solid var(--border);
+    padding-top: .8rem;
+    margin-top: .3rem;
+  }
+
+  /* Toast */
+  .toast {
+    position: fixed;
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%) translateY(120%);
+    background: var(--text);
+    color: var(--surface);
+    padding: .7rem 1.4rem;
+    border-radius: 2rem;
+    font-size: .8rem;
+    box-shadow: var(--shadow-lg);
+    z-index: 200;
+    transition: transform .3s cubic-bezier(.34,1.56,.64,1);
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+  }
+  .toast.show { transform: translateX(-50%) translateY(0); }
+  .toast i { color: var(--accent); }
+
+  /* Shortcut hint */
+  .shortcut-hint {
+    position: fixed;
+    bottom: 1rem;
+    right: 1rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 1rem;
+    padding: .6rem .9rem;
+    font-size: .7rem;
+    color: var(--text-muted);
+    box-shadow: var(--shadow-md);
+    z-index: 50;
+    display: flex;
+    flex-direction: column;
+    gap: .25rem;
+    max-width: 220px;
+    transition: opacity .3s, transform .3s;
+  }
+  .shortcut-hint.hide { opacity: 0; pointer-events: none; transform: translateY(10px); }
+  .shortcut-hint kbd {
+    background: var(--accent-soft);
+    border: 1px solid var(--border);
+    border-radius: .3rem;
+    padding: .05rem .3rem;
+    font-family: monospace;
+    font-size: .65rem;
+    color: var(--text-soft);
+  }
+  .shortcut-hint .close-hint {
+    position: absolute; top: .3rem; right: .4rem; cursor: pointer;
+    color: var(--text-muted); font-size: .7rem;
+  }
+
+  /* Responsive */
+  @media (max-width: 860px) {
+    body { padding: .5rem; }
+    .journal-app { height: 96vh; border-radius: 1.5rem; }
+    .sidebar {
+      position: fixed;
+      left: 0; top: 0; bottom: 0;
+      z-index: 90;
+      transform: translateX(-100%);
+      transition: transform .25s ease;
+      width: 260px;
+      border-radius: 0;
+    }
+    .sidebar.open { transform: translateX(0); box-shadow: var(--shadow-lg); }
+    .menu-toggle { display: flex !important; }
+    .top-bar { padding: 1rem 1rem .5rem; }
+    .editor-area, .list-toolbar, .entries-list { padding-left: 1rem; padding-right: 1rem; }
+    .search-box { max-width: 100%; order: 3; flex: 1 1 100%; }
+    .shortcut-hint { display: none; }
+  }
+  .menu-toggle {
+    display: none;
+    background: var(--accent-soft);
+    border: 1px solid var(--border);
+    width: 2.3rem; height: 2.3rem;
+    border-radius: 50%;
+    align-items: center; justify-content: center;
+    color: var(--text-soft); cursor: pointer; font-size: .9rem;
+  }
+
+  /* Print */
+  @media print {
+    body * { visibility: hidden; }
+    .modal-overlay.open, .modal-overlay.open * { visibility: visible; }
+    .modal-overlay.open { position: absolute; inset: 0; background: white; }
+    .modal-card { box-shadow: none; border: none; max-height: none; }
+    .modal-footer, .icon-btn { display: none !important; }
+  }
+</style>
+</head>
+<body data-theme="warm">
+<div class="journal-app">
+
+  <!-- ===== SIDEBAR ===== -->
+  <aside class="sidebar" id="sidebar">
+    <div class="logo">
+      <i class="fas fa-feather-alt"></i>
+      <h1>warm<span>journal</span></h1>
+    </div>
+
+    <div class="streak-badge" id="streakBadge" title="Consecutive days with entries">
+      <i class="fas fa-fire"></i> <span id="streakCount">0</span> day streak
+    </div>
+
+    <div class="nav-section">
+      <h3>navigation</h3>
+      <button class="nav-item active" data-filter="all">
+        <i class="fas fa-book-open"></i><span>All Entries</span>
+        <span class="count" id="countAll">0</span>
+      </button>
+      <button class="nav-item" data-filter="favorites">
+        <i class="fas fa-heart"></i><span>Favorites</span>
+        <span class="count" id="countFav">0</span>
+      </button>
+      <button class="nav-item" data-filter="pinned">
+        <i class="fas fa-thumbtack"></i><span>Pinned</span>
+        <span class="count" id="countPin">0</span>
+      </button>
+      <button class="nav-item" data-filter="today">
+        <i class="fas fa-calendar-day"></i><span>Today</span>
+        <span class="count" id="countToday">0</span>
+      </button>
+      <button class="nav-item" data-filter="week">
+        <i class="fas fa-calendar-week"></i><span>This Week</span>
+      </button>
+    </div>
+
+    <div class="nav-section">
+      <h3>moods</h3>
+      <div class="tag-cloud" id="moodCloud"></div>
+    </div>
+
+    <div class="nav-section">
+      <h3>
+        tags
+        <button id="clearTagFilter" title="Clear tag filter" style="display:none;">clear</button>
+      </h3>
+      <div class="tag-cloud" id="sidebarTagCloud"></div>
+    </div>
+
+    <div class="sidebar-footer">
+      <i class="fas fa-cloud-moon"></i>
+      <span>cherish every thought</span>
+    </div>
+  </aside>
+
+  <!-- ===== MAIN ===== -->
+  <main class="main">
+    <div class="top-bar">
+      <button class="menu-toggle" id="menuToggle" title="Menu"><i class="fas fa-bars"></i></button>
+      <div class="date-badge">
+        <i class="fas fa-calendar-day"></i>
+        <span id="currentDate">—</span>
+      </div>
+
+      <div class="search-box">
+        <i class="fas fa-search"></i>
+        <input type="text" id="searchInput" placeholder="Search thoughts or tags...">
+        <kbd>⌘K</kbd>
+      </div>
+
+      <div class="actions">
+        <button class="icon-btn" id="themeBtn" title="Toggle theme"><i class="fas fa-moon"></i></button>
+        <button class="icon-btn" id="randomBtn" title="Random memory"><i class="fas fa-dice"></i></button>
+        <button class="icon-btn" id="calendarBtn" title="Toggle calendar view"><i class="fas fa-calendar-alt"></i></button>
+        <button class="icon-btn" id="exportBtn" title="Export"><i class="fas fa-download"></i></button>
+        <button class="icon-btn" id="importBtn" title="Import JSON"><i class="fas fa-upload"></i></button>
+        <button class="icon-btn" id="clearStorageBtn" title="Reset all data"><i class="fas fa-trash-alt"></i></button>
+      </div>
+      <input type="file" id="importFile" accept=".json" hidden>
+    </div>
+
+    <!-- Editor -->
+    <div class="editor-area">
+      <div class="editor-card" id="editorCard">
+        <div class="editing-banner" id="editingBanner">
+          <i class="fas fa-pen"></i> Editing existing entry
+          <button class="btn btn-ghost" id="cancelEditBtn" style="padding:.1rem .5rem; font-size:.7rem;">cancel</button>
+        </div>
+        <div class="editor-title">
+          <input type="text" id="entryTitle" placeholder="Give this moment a name...">
+        </div>
+        <div class="editor-text">
+          <textarea id="entryContent" placeholder="Write freely, warm and slow..."></textarea>
+        </div>
+
+        <div class="editor-tags-builder" id="tagsBuilder" style="position:relative;">
+          <input type="text" id="tagInput" placeholder="+ add tag (Enter)" autocomplete="off">
+          <div class="autocomplete-popup" id="tagAutocomplete"></div>
+        </div>
+
+        <div class="editor-toolbar">
+          <div class="mood-selector" id="moodSelector">
+            <span class="mood active" data-mood="🌿" title="grateful">🌿</span>
+            <span class="mood" data-mood="☁️" title="peaceful">☁️</span>
+            <span class="mood" data-mood="✨" title="inspired">✨</span>
+            <span class="mood" data-mood="🌸" title="tender">🌸</span>
+            <span class="mood" data-mood="🔥" title="passionate">🔥</span>
+            <span class="mood" data-mood="🌧️" title="melancholy">🌧️</span>
+            <span class="mood" data-mood="☀️" title="joyful">☀️</span>
+          </div>
+          <div class="editor-meta">
+            <span id="wordCount">0 words</span>
+            <span id="readTime">~0 min read</span>
+          </div>
+          <div class="editor-buttons">
+            <button class="btn btn-ghost" id="promptBtn" title="Get a writing prompt"><i class="fas fa-lightbulb"></i></button>
+            <button class="btn btn-secondary" id="clearBtn"><i class="fas fa-undo-alt"></i> clear</button>
+            <button class="btn btn-primary" id="saveBtn"><i class="fas fa-feather"></i> save</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Toolbar -->
+    <div class="list-toolbar">
+      <div class="left">
+        <span class="chip-btn" id="resultsCount" style="cursor:default;">0 entries</span>
+        <button class="chip-btn active" data-sort="newest"><i class="fas fa-sort-amount-down"></i> Newest</button>
+        <button class="chip-btn" data-sort="oldest"><i class="fas fa-sort-amount-up"></i> Oldest</button>
+        <button class="chip-btn" data-sort="title"><i class="fas fa-font"></i> A–Z</button>
+      </div>
+      <div class="right">
+        <button class="chip-btn" id="onThisDayBtn" title="Entries from this day in past months"><i class="fas fa-history"></i> On this day</button>
+        <button class="chip-btn" id="collapseAllBtn" title="Toggle group headers"><i class="fas fa-layer-group"></i> Group by day</button>
+      </div>
+    </div>
+
+    <!-- Entries -->
+    <div class="entries-list" id="entriesList"></div>
+  </main>
+</div>
+
+<!-- ===== MODAL ===== -->
+<div class="modal-overlay" id="detailModal">
+  <div class="modal-card">
+    <div class="modal-header">
+      <div style="display:flex; align-items:flex-start; gap:.7rem; flex:1; min-width:0;">
+        <span id="modalMood" style="font-size:1.5rem; line-height:1;"></span>
+        <div style="min-width:0;">
+          <h3 id="modalTitle">—</h3>
+          <div class="modal-meta" id="modalMeta"></div>
+        </div>
+      </div>
+      <button class="icon-btn" id="closeModalBtn"><i class="fas fa-times"></i></button>
+    </div>
+    <div class="modal-body" id="modalContent"></div>
+    <div class="entry-tags" id="modalTags"></div>
+    <div class="modal-footer">
+      <div style="display:flex; gap:.4rem;">
+        <button class="btn btn-secondary" id="modalFavBtn"><i class="far fa-heart"></i> Favorite</button>
+        <button class="btn btn-secondary" id="modalPinBtn"><i class="fas fa-thumbtack"></i> Pin</button>
+        <button class="btn btn-secondary" id="modalPrintBtn"><i class="fas fa-print"></i> Print</button>
+      </div>
+      <div style="display:flex; gap:.4rem;">
+        <button class="btn btn-secondary" id="modalCopyBtn"><i class="fas fa-copy"></i> Copy</button>
+        <button class="btn btn-primary" id="modalEditBtn"><i class="fas fa-pen"></i> Edit</button>
+        <button class="btn btn-secondary" id="modalDeleteBtn" style="color:var(--heart);"><i class="fas fa-trash"></i></button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"><i class="fas fa-check-circle"></i><span id="toastMsg">Saved</span></div>
+
+<!-- Shortcut hint -->
+<div class="shortcut-hint" id="shortcutHint">
+  <i class="fas fa-times close-hint" id="closeHint"></i>
+  <div><kbd>⌘/Ctrl</kbd> + <kbd>S</kbd> save</div>
+  <div><kbd>⌘/Ctrl</kbd> + <kbd>K</kbd> search</div>
+  <div><kbd>⌘/Ctrl</kbd> + <kbd>Enter</kbd> save entry</div>
+  <div><kbd>Esc</kbd> close / clear</div>
+</div>
+
+<script>
+(function(){
+  'use strict';
+
+  // =====================
+  // CONSTANTS & STATE
+  // =====================
+  const STORAGE_KEY = 'warm_journal_v3';
+  const DRAFT_KEY = 'warm_journal_draft_v3';
+  const THEME_KEY = 'warm_journal_theme';
+  const PROMPTS = [
+    "What made you feel warm today?",
+    "Describe a small moment you want to remember.",
+    "What are you grateful for right now?",
+    "What did you learn about yourself today?",
+    "Write about someone who made you smile.",
+    "What would you tell your past self?",
+    "Describe your current mood in three words.",
+    "What's one thing you're looking forward to?",
+    "What does 'home' mean to you today?",
+    "Write about a sound that comforted you.",
+    "What's a fear you're ready to release?",
+    "Describe a color you felt today.",
+    "What's a dream you had recently?",
+    "Who do you miss, and why?",
+    "What's something beautiful you noticed?",
+    "Write a letter to your future self.",
+    "What does rest look like for you?",
+    "What's a memory that always makes you smile?",
+    "How did you show yourself kindness today?",
+    "What's one thing you'd like to let go of?"
+  ];
+  const MOOD_LABELS = { '🌿':'grateful', '☁️':'peaceful', '✨':'inspired', '🌸':'tender', '🔥':'passionate', '🌧️':'melancholy', '☀️':'joyful' };
+
+  let state = {
+    entries: [],
+    filter: 'all',
+    tagFilter: null,
+    moodFilter: null,
+    search: '',
+    sort: 'newest',
+    groupByDay: false,
+    editingId: null,
+    activeMood: '🌿',
+    draftTags: [],
+    onThisDay: false
+  };
+
+  // =====================
+  // DOM REFS
+  // =====================
+  const $ = id => document.getElementById(id);
+  const els = {
+    date: $('currentDate'), sidebar: $('sidebar'), menuToggle: $('menuToggle'),
+    streakCount: $('streakCount'),
+    title: $('entryTitle'), content: $('entryContent'),
+    saveBtn: $('saveBtn'), clearBtn: $('clearBtn'), promptBtn: $('promptBtn'),
+    entriesList: $('entriesList'),
+    moodSelector: $('moodSelector'), tagInput: $('tagInput'), tagsBuilder: $('tagsBuilder'),
+    tagAutocomplete: $('tagAutocomplete'),
+    sidebarTagCloud: $('sidebarTagCloud'), moodCloud: $('moodCloud'),
+    search: $('searchInput'), resultsCount: $('resultsCount'),
+    countAll: $('countAll'), countFav: $('countFav'), countPin: $('countPin'), countToday: $('countToday'),
+    wordCount: $('wordCount'), readTime: $('readTime'),
+    editorCard: $('editorCard'), editingBanner: $('editingBanner'), cancelEditBtn: $('cancelEditBtn'),
+    themeBtn: $('themeBtn'), randomBtn: $('randomBtn'), calendarBtn: $('calendarBtn'),
+    exportBtn: $('exportBtn'), importBtn: $('importBtn'), importFile: $('importFile'), clearStorageBtn: $('clearStorageBtn'),
+    detailModal: $('detailModal'), closeModalBtn: $('closeModalBtn'),
+    modalTitle: $('modalTitle'), modalMood: $('modalMood'), modalMeta: $('modalMeta'),
+    modalContent: $('modalContent'), modalTags: $('modalTags'),
+    modalFavBtn: $('modalFavBtn'), modalPinBtn: $('modalPinBtn'), modalPrintBtn: $('modalPrintBtn'),
+    modalCopyBtn: $('modalCopyBtn'), modalEditBtn: $('modalEditBtn'), modalDeleteBtn: $('modalDeleteBtn'),
+    toast: $('toast'), toastMsg: $('toastMsg'),
+    shortcutHint: $('shortcutHint'), closeHint: $('closeHint'),
+    onThisDayBtn: $('onThisDayBtn'), collapseAllBtn: $('collapseAllBtn'),
+    clearTagFilter: $('clearTagFilter')
+  };
+
+  // =====================
+  // UTILS
+  // =====================
+  const esc = s => (s||'').replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
+  const todayStr = () => new Date().toLocaleDateString('en-US', { weekday:'long', month:'long', day:'numeric', year:'numeric' });
+  const shortDate = d => new Date(d).toLocaleDateString('en-US', { weekday:'short', month:'short', day:'numeric' });
+  const timeNow = () => {
+    const n = new Date(); let h = n.getHours();
+    const m = String(n.getMinutes()).padStart(2,'0');
+    const ap = h >= 12 ? 'pm' : 'am'; h = h % 12 || 12;
+    return `${h}:${m} ${ap}`;
+  };
+  const wordCount = t => t.trim() ? t.trim().split(/\s+/).length : 0;
+  const readTime = t => Math.max(1, Math.round(wordCount(t) / 200));
+  const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
+
+  function toast(msg, icon='check-circle') {
+    els.toastMsg.textContent = msg;
+    els.toast.querySelector('i').className = `fas fa-${icon}`;
+    els.toast.classList.add('show');
+    clearTimeout(toast._t);
+    toast._t = setTimeout(() => els.toast.classList.remove('show'), 2200);
+  }
+
+  function isToday(dateStr) {
+    const t = new Date().toLocaleDateString('en-US', { weekday:'long', month:'long', day:'numeric', year:'numeric' });
+    return dateStr === t;
+  }
+  function isThisWeek(dateStr) {
+    const d = new Date(dateStr);
+    const now = new Date();
+    const start = new Date(now); start.setDate(now.getDate() - now.getDay());
+    start.setHours(0,0,0,0);
+    return d >= start;
+  }
+
+  // =====================
+  // STORAGE
+  // =====================
+  function load() {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (raw) {
+        const parsed = JSON.parse(raw);
+        if (Array.isArray(parsed)) return parsed;
+      }
+    } catch(e) { console.warn(e); }
+    // Seed
+    return [
+      { id: uid(), title: 'evening wind', content: 'the air smelled like rain and old books. i felt held by something bigger.', time: '8:22 pm', date: todayStr(), mood: '☁️', tags: ['#peaceful','#nature'], favorite: true, pinned: false, created: Date.now() - 86400000 },
+      { id: uid(), title: 'small win', content: 'finished the project i was avoiding. celebrated with a warm cup of tea.', time: '2:15 pm', date: todayStr(), mood: '✨', tags: ['#growth','#gratitude'], favorite: false, pinned: false, created: Date.now() - 3600000 }
+    ];
+  }
+  function save() {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state.entries));
+    } catch(e) { console.warn('Save failed', e); }
+  }
+
+  function saveDraft() {
+    const draft = { title: els.title.value, content: els.content.value, tags: state.draftTags, mood: state.activeMood, editingId: state.editingId };
+    if (draft.title || draft.content || draft.tags.length) {
+      try { localStorage.setItem(DRAFT_KEY, JSON.stringify(draft)); } catch(e){}
+    } else {
+      localStorage.removeItem(DRAFT_KEY);
+    }
+  }
+  function loadDraft() {
+    try {
+      const raw = localStorage.getItem(DRAFT_KEY);
+      if (!raw) return false;
+      const d = JSON.parse(raw);
+      if (d.title || d.content) {
+        els.title.value = d.title || '';
+        els.content.value = d.content || '';
+        state.draftTags = d.tags || [];
+        state.activeMood = d.mood || '🌿';
+        if (d.editingId) state.editingId = d.editingId;
+        syncMoodUI();
+        syncEditorMode();
+        autoResize();
+        return true;
+      }
+    } catch(e){}
+    return false;
+  }
+
+  // =====================
+  // RENDER: SIDEBAR
+  // =====================
+  function renderSidebar() {
+    // Counts
+    els.countAll.textContent = state.entries.length;
+    els.countFav.textContent = state.entries.filter(e => e.favorite).length;
+    els.countPin.textContent = state.entries.filter(e => e.pinned).length;
+    els.countToday.textContent = state.entries.filter(e => isToday(e.date)).length;
+
+    // Streak
+    const days = new Set(state.entries.map(e => e.date));
+    let streak = 0;
+    const d = new Date();
+    for (let i = 0; i < 365; i++) {
+      const key = d.toLocaleDateString('en-US', { weekday:'long', month:'long', day:'numeric', year:'numeric' });
+      if (days.has(key)) { streak++; d.setDate(d.getDate() - 1); }
+      else if (i === 0) { d.setDate(d.getDate() - 1); }
+      else break;
+    }
+    els.streakCount.textContent = streak;
+
+    // Mood cloud
+    const moodCounts = {};
+    state.entries.forEach(e => { if (e.mood) moodCounts[e.mood] = (moodCounts[e.mood] || 0) + 1; });
+    els.moodCloud.innerHTML = '';
+    Object.entries(moodCounts).sort((a,b) => b[1] - a[1]).forEach(([m, c]) => {
+      const tag = document.createElement('span');
+      tag.className = 'tag' + (state.moodFilter === m ? ' active' : '');
+      tag.innerHTML = `${m} ${MOOD_LABELS[m]||''}<span class="tag-count">${c}</span>`;
+      tag.onclick = () => { state.moodFilter = state.moodFilter === m ? null : m; render(); };
+      els.moodCloud.appendChild(tag);
+    });
+
+    // Tag cloud
+    const tagCounts = {};
+    state.entries.forEach(e => e.tags.forEach(t => { tagCounts[t] = (tagCounts[t]||0) + 1; }));
+    els.sidebarTagCloud.innerHTML = '';
+    if (Object.keys(tagCounts).length === 0) {
+      els.sidebarTagCloud.innerHTML = '<span style="font-size:.72rem; color:var(--text-muted);">No tags yet</span>';
+    } else {
+      Object.entries(tagCounts).sort((a,b) => b[1] - a[1]).forEach(([t, c]) => {
+        const tag = document.createElement('span');
+        tag.className = 'tag' + (state.tagFilter === t ? ' active' : '');
+        tag.innerHTML = `${esc(t)}<span class="tag-count">${c}</span>`;
+        tag.onclick = () => { state.tagFilter = state.tagFilter === t ? null : t; state.filter = 'all'; render(); };
+        els.sidebarTagCloud.appendChild(tag);
+      });
+    }
+    els.clearTagFilter.style.display = state.tagFilter ? 'inline' : 'none';
+
+    // Nav active
+    document.querySelectorAll('.sidebar .nav-item').forEach(n => {
+      n.classList.toggle('active', n.dataset.filter === state.filter && !state.tagFilter && !state.moodFilter);
+    });
+  }
+
+  // =====================
+  // RENDER: ENTRIES
+  // =====================
+  function getFiltered() {
+    let arr = state.entries.slice();
+    // Filter
+    if (state.filter === 'favorites') arr = arr.filter(e => e.favorite);
+    else if (state.filter === 'pinned') arr = arr.filter(e => e.pinned);
+    else if (state.filter === 'today') arr = arr.filter(e => isToday(e.date));
+    else if (state.filter === 'week') arr = arr.filter(e => isThisWeek(e.date));
+    if (state.tagFilter) arr = arr.filter(e => e.tags.includes(state.tagFilter));
+    if (state.moodFilter) arr = arr.filter(e => e.mood === state.moodFilter);
+    if (state.search) {
+      const q = state.search.toLowerCase();
+      arr = arr.filter(e =>
+        (e.title||'').toLowerCase().includes(q) ||
+        (e.content||'').toLowerCase().includes(q) ||
+        e.tags.some(t => t.toLowerCase().includes(q)) ||
+        (MOOD_LABELS[e.mood]||'').toLowerCase().includes(q)
+      );
+    }
+    if (state.onThisDay) {
+      const t = new Date();
+      const md = `${t.getMonth()}-${t.getDate()}`;
+      arr = arr.filter(e => {
+        const d = new Date(e.created || Date.now());
+        return `${d.getMonth()}-${d.getDate()}` === md;
+      });
+      if (arr.length === 0) {
+        // Fallback: show last year same day-ish → just show oldest
+        arr = state.entries.slice().sort((a,b) => (a.created||0) - (b.created||0)).slice(0, 3);
+      }
+    }
+    // Sort
+    const pinned = arr.filter(e => e.pinned);
+    const rest = arr.filter(e => !e.pinned);
+    const cmp = {
+      newest: (a,b) => (b.created||0) - (a.created||0),
+      oldest: (a,b) => (a.created||0) - (b.created||0),
+      title: (a,b) => (a.title||'').localeCompare(b.title||'')
+    }[state.sort] || ((a,b) => (b.created||0) - (a.created||0));
+    pinned.sort(cmp); rest.sort(cmp);
+    return [...pinned, ...rest];
+  }
+
+  function renderEntries() {
+    const list = getFiltered();
+    els.resultsCount.textContent = `${list.length} ${list.length === 1 ? 'entry' : 'entries'}`;
+    els.entriesList.innerHTML = '';
+
+    if (list.length === 0) {
+      els.entriesList.innerHTML = `<div class="empty-msg"><i class="fas fa-feather-alt"></i>No cherished moments here yet.<br><span style="font-size:.85rem;">Write something warm above ✨</span></div>`;
+      return;
+    }
+
+    let lastDay = null;
+    list.forEach(entry => {
+      if (state.groupByDay && entry.date !== lastDay) {
+        const header = document.createElement('div');
+        header.className = 'group-header';
+        header.textContent = entry.date === todayStr() ? 'Today' : entry.date;
+        els.entriesList.appendChild(header);
+        lastDay = entry.date;
+      }
+
+      const item = document.createElement('div');
+      item.className = 'entry-item' + (entry.pinned ? ' pinned' : '') + (entry.favorite ? ' favorite' : '');
+      item.dataset.id = entry.id;
+
+      const tagsHtml = entry.tags.slice(0, 4).map(t => `<span class="entry-tag" data-tag="${esc(t)}">${esc(t)}</span>`).join('');
+
+      item.innerHTML = `
+        <div class="entry-header">
+          <div class="entry-title-wrap">
+            <span class="entry-mood">${entry.mood || '🌿'}</span>
+            <h4>${esc(entry.title) || 'untitled moment'}</h4>
+          </div>
+          <div class="entry-meta">
+            <i class="far fa-clock"></i> ${esc(entry.time || '')}
+            <button class="meta-btn ${entry.pinned?'pin-on':''}" data-action="pin" title="${entry.pinned?'Unpin':'Pin'}"><i class="fas fa-thumbtack"></i></button>
+            <button class="meta-btn ${entry.favorite?'fav-on':''}" data-action="fav" title="${entry.favorite?'Unfavorite':'Favorite'}"><i class="fa${entry.favorite?'s':'r'} fa-heart"></i></button>
+            <button class="meta-btn" data-action="delete" title="Delete"><i class="fas fa-trash"></i></button>
+          </div>
+        </div>
+        <div class="entry-preview">${esc(entry.content) || '<em style="color:var(--text-muted)">empty entry</em>'}</div>
+        <div class="entry-footer">
+          <div class="entry-tags">${tagsHtml}</div>
+          <span class="entry-reading">${readTime(entry.content||'')} min read</span>
+        </div>
+      `;
+
+      // Whole card click → modal
+      item.addEventListener('click', e => {
+        if (e.target.closest('[data-action]') || e.target.closest('.entry-tag')) return;
+        openModal(entry);
+      });
+
+      // Meta actions
+      item.querySelectorAll('[data-action]').forEach(btn => {
+        btn.addEventListener('click', e => {
+          e.stopPropagation();
+          const action = btn.dataset.action;
+          if (action === 'fav') { entry.favorite = !entry.favorite; save(); render(); }
+          else if (action === 'pin') { entry.pinned = !entry.pinned; save(); render(); }
+          else if (action === 'delete') {
+            if (confirm(`Delete "${entry.title || 'this entry'}"?`)) {
+              state.entries = state.entries.filter(x => x.id !== entry.id);
+              save(); render(); toast('Entry deleted', 'trash');
+            }
+          }
+        });
+      });
+
+      // Tag click → filter
+      item.querySelectorAll('.entry-tag').forEach(t => {
+        t.addEventListener('click', e => {
+          e.stopPropagation();
+          state.tagFilter = t.dataset.tag; state.filter = 'all'; render();
+        });
+      });
+
+      els.entriesList.appendChild(item);
+    });
+  }
+
+  function render() {
+    renderSidebar();
+    renderEntries();
+    renderDraftTags();
+    updateWordCount();
+    syncMoodUI();
+  }
+
+  // =====================
+  // DRAFT TAGS
+  // =====================
+  function renderDraftTags() {
+    els.tagsBuilder.querySelectorAll('.tag-chip').forEach(c => c.remove());
+    state.draftTags.forEach((tag, idx) => {
+      const chip = document.createElement('span');
+      chip.className = 'tag-chip';
+      chip.innerHTML = `${esc(tag)} <i class="fas fa-times" data-idx="${idx}"></i>`;
+      els.tagsBuilder.insertBefore(chip, els.tagInput);
+    });
+  }
+
+  // =====================
+  // EDITOR HELPERS
+  // =====================
+  function autoResize() {
+    els.content.style.height = 'auto';
+    els.content.style.height = Math.min(els.content.scrollHeight, 180) + 'px';
+  }
+  function updateWordCount() {
+    const wc = wordCount(els.content.value);
+    els.wordCount.textContent = `${wc} ${wc === 1 ? 'word' : 'words'}`;
+    els.readTime.textContent = `~${readTime(els.content.value)} min read`;
+  }
+  function syncMoodUI() {
+    els.moodSelector.querySelectorAll('.mood').forEach(m => {
+      m.classList.toggle('active', m.dataset.mood === state.activeMood);
+    });
+  }
+  function syncEditorMode() {
+    const editing = !!state.editingId;
+    els.editingBanner.classList.toggle('show', editing);
+    els.editorCard.classList.toggle('editing', editing);
+    els.saveBtn.innerHTML = editing
+      ? '<i class="fas fa-check"></i> update'
+      : '<i class="fas fa-feather"></i> save';
+  }
+
+  // =====================
+  // SAVE / CLEAR / EDIT
+  // =====================
+  function saveEntry() {
+    const title = els.title.value.trim();
+    const content = els.content.value.trim();
+    if (!title && !content) { toast('Write something first', 'info-circle'); return; }
+
+    if (state.editingId) {
+      const e = state.entries.find(x => x.id === state.editingId);
+      if (e) {
+        e.title = title || 'Untitled Moment';
+        e.content = content;
+        e.tags = state.draftTags.length ? [...state.draftTags] : ['#reflection'];
+        e.mood = state.activeMood;
+        e.time = timeNow();
+        e.edited = Date.now();
+      }
+      toast('Entry updated', 'check');
+    } else {
+      state.entries.unshift({
+        id: uid(),
+        title: title || 'Untitled Moment',
+        content,
+        time: timeNow(),
+        date: todayStr(),
+        mood: state.activeMood,
+        tags: state.draftTags.length ? [...state.draftTags] : ['#reflection'],
+        favorite: false, pinned: false,
+        created: Date.now()
+      });
+      toast('Entry saved', 'feather');
+    }
+
+    // Reset
+    els.title.value = '';
+    els.content.value = '';
+    state.draftTags = [];
+    state.editingId = null;
+    state.activeMood = '🌿';
+    localStorage.removeItem(DRAFT_KEY);
+    autoResize();
+    syncEditorMode();
+    save();
+    render();
+  }
+
+  function clearEditor() {
+    els.title.value = '';
+    els.content.value = '';
+    state.draftTags = [];
+    state.editingId = null;
+    state.activeMood = '🌿';
+    localStorage.removeItem(DRAFT_KEY);
+    autoResize();
+    syncEditorMode();
+    render();
+    toast('Editor cleared', 'eraser');
+  }
+
+  function startEdit(entry) {
+    state.editingId = entry.id;
+    els.title.value = entry.title || '';
+    els.content.value = entry.content || '';
+    state.draftTags = [...(entry.tags || [])];
+    state.activeMood = entry.mood || '🌿';
+    syncEditorMode();
+    syncMoodUI();
+    renderDraftTags();
+    autoResize();
+    closeModal();
+    els.title.focus();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  // =====================
+  // MODAL
+  // =====================
+  let modalEntry = null;
+  function openModal(entry) {
+    modalEntry = entry;
+    els.modalMood.textContent = entry.mood || '🌿';
+    els.modalTitle.textContent = entry.title || 'Untitled Moment';
+    els.modalMeta.innerHTML = `
+      <span><i class="far fa-calendar"></i> ${esc(entry.date || '')}</span>
+      <span><i class="far fa-clock"></i> ${esc(entry.time || '')}</span>
+      <span><i class="fas fa-book"></i> ${wordCount(entry.content||'')} words</span>
+    `;
+    els.modalContent.textContent = entry.content || '(empty)';
+    els.modalTags.innerHTML = (entry.tags||[]).map(t => `<span class="entry-tag">${esc(t)}</span>`).join('');
+    els.modalFavBtn.innerHTML = `<i class="fa${entry.favorite?'s':'r'} fa-heart"></i> ${entry.favorite?'Favorited':'Favorite'}`;
+    els.modalPinBtn.innerHTML = `<i class="fas fa-thumbtack"></i> ${entry.pinned?'Pinned':'Pin'}`;
+    els.detailModal.classList.add('open');
+  }
+  function closeModal() {
+    els.detailModal.classList.remove('open');
+    modalEntry = null;
+  }
+
+  // =====================
+  // EVENTS
+  // =====================
+  function bind() {
+    // Save / clear
+    els.saveBtn.addEventListener('click', saveEntry);
+    els.clearBtn.addEventListener('click', clearEditor);
+    els.cancelEditBtn.addEventListener('click', () => { state.editingId = null; syncEditorMode(); });
+
+    // Prompt
+    els.promptBtn.addEventListener('click', () => {
+      const p = PROMPTS[Math.floor(Math.random() * PROMPTS.length)];
+      if (!els.content.value) els.content.value = p + '\n\n';
+      else els.content.value += '\n\n' + p + '\n\n';
+      autoResize(); updateWordCount(); saveDraft();
+    });
+
+    // Editor auto-save draft
+    els.title.addEventListener('input', () => { saveDraft(); });
+    els.content.addEventListener('input', () => { autoResize(); updateWordCount(); saveDraft(); });
+
+    // Mood
+    els.moodSelector.addEventListener('click', e => {
+      const m = e.target.closest('.mood'); if (!m) return;
+      state.activeMood = m.dataset.mood;
+      syncMoodUI(); saveDraft();
+    });
+
+    // Tag input
+    els.tagInput.addEventListener('keydown', e => {
+      if (e.key === 'Enter' || e.key === ',') {
+        e.preventDefault();
+        const v = els.tagInput.value.trim();
+        if (v) addTag(v);
+        els.tagInput.value = '';
+        els.tagAutocomplete.classList.remove('show');
+      } else if (e.key === 'Backspace' && !els.tagInput.value && state.draftTags.length) {
+        state.draftTags.pop(); renderDraftTags(); saveDraft();
+      } else if (e.key === 'Escape') {
+        els.tagAutocomplete.classList.remove('show');
+      }
+    });
+    els.tagInput.addEventListener('input', () => {
+      const q = els.tagInput.value.trim().toLowerCase();
+      if (!q) { els.tagAutocomplete.classList.remove('show'); return; }
+      const existing = new Set();
+      state.entries.forEach(e => e.tags.forEach(t => existing.add(t)));
+      const matches = [...existing].filter(t => t.toLowerCase().includes(q) && !state.draftTags.includes(t)).slice(0, 6);
+      if (matches.length === 0) { els.tagAutocomplete.classList.remove('show'); return; }
+      els.tagAutocomplete.innerHTML = matches.map(t => `<div data-tag="${esc(t)}">${esc(t)}</div>`).join('');
+      els.tagAutocomplete.classList.add('show');
+      els.tagAutocomplete.querySelectorAll('div').forEach(d => {
+        d.onclick = () => { addTag(d.dataset.tag); els.tagInput.value = ''; els.tagAutocomplete.classList.remove('show'); };
+      });
+    });
+    els.tagsBuilder.addEventListener('click', e => {
+      if (e.target.classList.contains('fa-times')) {
+        state.draftTags.splice(+e.target.dataset.idx, 1);
+        renderDraftTags(); saveDraft();
+      }
+    });
+
+    // Search
+    els.search.addEventListener('input', () => { state.search = els.search.value; renderEntries(); });
+
+    // Filter nav
+    document.querySelectorAll('.sidebar .nav-item').forEach(n => {
+      n.addEventListener('click', () => {
+        state.filter = n.dataset.filter;
+        state.tagFilter = null; state.moodFilter = null; state.onThisDay = false;
+        state.onThisDayBtn?.classList.remove('active');
+        render();
+        if (window.innerWidth <= 860) els.sidebar.classList.remove('open');
+      });
+    });
+    els.clearTagFilter.addEventListener('click', () => { state.tagFilter = null; render(); });
+
+    // Sort
+    document.querySelectorAll('[data-sort]').forEach(b => {
+      b.addEventListener('click', () => {
+        document.querySelectorAll('[data-sort]').forEach(x => x.classList.remove('active'));
+        b.classList.add('active');
+        state.sort = b.dataset.sort;
+        renderEntries();
+      });
+    });
+
+    // On this day
+    els.onThisDayBtn.addEventListener('click', () => {
+      state.onThisDay = !state.onThisDay;
+      els.onThisDayBtn.classList.toggle('active', state.onThisDay);
+      if (state.onThisDay) toast('Showing memories from this day', 'history');
+      render();
+    });
+
+    // Group by day
+    els.collapseAllBtn.addEventListener('click', () => {
+      state.groupByDay = !state.groupByDay;
+      els.collapseAllBtn.classList.toggle('active', state.groupByDay);
+      renderEntries();
+    });
+
+    // Random memory
+    els.randomBtn.addEventListener('click', () => {
+      if (state.entries.length === 0) { toast('No entries yet', 'info-circle'); return; }
+      const e = state.entries[Math.floor(Math.random() * state.entries.length)];
+      openModal(e);
+    });
+
+    // Theme
+    els.themeBtn.addEventListener('click', () => {
+      const cur = document.body.dataset.theme;
+      const next = cur === 'night' ? 'light' : cur === 'light' ? 'warm' : 'night';
+      document.body.dataset.theme = next;
+      localStorage.setItem(THEME_KEY, next);
+      els.themeBtn.querySelector('i').className = next === 'night' ? 'fas fa-sun' : next === 'light' ? 'fas fa-adjust' : 'fas fa-moon';
+      toast(`Theme: ${next}`, 'palette');
+    });
+
+    // Calendar view toggle (group by day + sort oldest)
+    els.calendarBtn.addEventListener('click', () => {
+      state.groupByDay = !state.groupByDay;
+      els.collapseAllBtn.classList.toggle('active', state.groupByDay);
+      renderEntries();
+      toast(state.groupByDay ? 'Grouped by day' : 'Ungrouped', 'calendar-alt');
+    });
+
+    // Export
+    els.exportBtn.addEventListener('click', () => {
+      const data = JSON.stringify(state.entries, null, 2);
+      const blob = new Blob([data], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url; a.download = `warm-journal-${new Date().toISOString().slice(0,10)}.json`;
+      a.click(); URL.revokeObjectURL(url);
+      toast('Exported JSON', 'download');
+    });
+
+    // Import
+    els.importBtn.addEventListener('click', () => els.importFile.click());
+    els.importFile.addEventListener('change', e => {
+      const f = e.target.files[0]; if (!f) return;
+      const reader = new FileReader();
+      reader.onload = ev => {
+        try {
+          const imported = JSON.parse(ev.target.result);
+          if (!Array.isArray(imported)) throw new Error('Not an array');
+          const valid = imported.filter(x => x && typeof x === 'object');
+          if (valid.length === 0) throw new Error('No valid entries');
+          if (confirm(`Import ${valid.length} entries? This will merge with existing.`)) {
+            valid.forEach(v => { if (!v.id) v.id = uid(); if (!v.created) v.created = Date.now(); if (!v.tags) v.tags = []; });
+            state.entries = [...valid, ...state.entries];
+            save(); render();
+            toast(`Imported ${valid.length} entries`, 'upload');
+          }
+        } catch(err) { toast('Import failed: ' + err.message, 'exclamation-triangle'); }
+      };
+      reader.readAsText(f);
+      e.target.value = '';
+    });
+
+    // Clear all
+    els.clearStorageBtn.addEventListener('click', () => {
+      if (!state.entries.length) { toast('Nothing to clear', 'info-circle'); return; }
+      if (confirm('Delete ALL journal entries? This cannot be undone.')) {
+        state.entries = []; save(); render(); toast('All entries cleared', 'trash');
+      }
+    });
+
+    // Modal
+    els.closeModalBtn.addEventListener('click', closeModal);
+    els.detailModal.addEventListener('click', e => { if (e.target === els.detailModal) closeModal(); });
+
+    els.modalFavBtn.addEventListener('click', () => {
+      if (!modalEntry) return;
+      modalEntry.favorite = !modalEntry.favorite; save(); render(); openModal(modalEntry);
+    });
+    els.modalPinBtn.addEventListener('click', () => {
+      if (!modalEntry) return;
+      modalEntry.pinned = !modalEntry.pinned; save(); render(); openModal(modalEntry);
+    });
+    els.modalPrintBtn.addEventListener('click', () => window.print());
+    els.modalCopyBtn.addEventListener('click', () => {
+      if (!modalEntry) return;
+      navigator.clipboard.writeText(`${modalEntry.title}\n\n${modalEntry.content}`)
+        .then(() => toast('Copied to clipboard', 'copy'))
+        .catch(() => toast('Copy failed', 'exclamation-triangle'));
+    });
+    els.modalEditBtn.addEventListener('click', () => { if (modalEntry) startEdit(modalEntry); });
+    els.modalDeleteBtn.addEventListener('click', () => {
+      if (!modalEntry) return;
+      if (confirm('Delete this entry?')) {
+        state.entries = state.entries.filter(x => x.id !== modalEntry.id);
+        save(); render(); closeModal(); toast('Entry deleted', 'trash');
+      }
+    });
+
+    // Mobile menu
+    els.menuToggle.addEventListener('click', () => els.sidebar.classList.toggle('open'));
+
+    // Shortcut hint
+    els.closeHint.addEventListener('click', () => els.shortcutHint.classList.add('hide'));
+    setTimeout(() => els.shortcutHint.classList.add('hide'), 12000);
+
+    // Keyboard shortcuts
+    document.addEventListener('keydown', e => {
+      const mod = e.metaKey || e.ctrlKey;
+      if (mod && e.key === 's') { e.preventDefault(); saveEntry(); }
+      else if (mod && e.key === 'k') { e.preventDefault(); els.search.focus(); els.search.select(); }
+      else if (mod && e.key === 'Enter') { e.preventDefault(); saveEntry(); }
+      else if (e.key === 'Escape') {
+        if (els.detailModal.classList.contains('open')) closeModal();
+        else if (state.editingId) { state.editingId = null; syncEditorMode(); }
+        else if (document.activeElement === els.search) { els.search.value = ''; state.search = ''; renderEntries(); els.search.blur(); }
+      }
+      // Quick nav: 1-5 for filters
+      if (!mod && document.activeElement === document.body) {
+        if (e.key === '1') document.querySelector('[data-filter="all"]').click();
+        if (e.key === '2') document.querySelector('[data-filter="favorites"]').click();
+        if (e.key === '3') document.querySelector('[data-filter="pinned"]').click();
+        if (e.key === '4') document.querySelector('[data-filter="today"]').click();
+        if (e.key === '5') document.querySelector('[data-filter="week"]').click();
+      }
+    });
+  }
+
+  function addTag(v) {
+    let tag = v.trim();
+    if (!tag) return;
+    if (!tag.startsWith('#')) tag = '#' + tag;
+    if (!state.draftTags.includes(tag)) {
+      state.draftTags.push(tag);
+      renderDraftTags(); saveDraft();
+    }
+  }
+
+  // =====================
+  // INIT
+  // =====================
+  function init() {
+    // Theme
+    const savedTheme = localStorage.getItem(THEME_KEY) || 'warm';
+    document.body.dataset.theme = savedTheme;
+    els.themeBtn.querySelector('i').className = savedTheme === 'night' ? 'fas fa-sun' : savedTheme === 'light' ? 'fas fa-adjust' : 'fas fa-moon';
+
+    // Date
+    els.date.textContent = new Date().toLocaleDateString('en-US', { weekday:'long', month:'long', day:'numeric' }).toLowerCase();
+
+    // Entries
+    state.entries = load();
+
+    // Draft recovery
+    if (loadDraft()) {
+      toast('Draft restored', 'history');
+    }
+
+    bind();
+    render();
+    autoResize();
+  }
+
+  init();
+})();
+</script>
+</body>
+</html>
